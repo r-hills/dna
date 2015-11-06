@@ -1,0 +1,82 @@
+<?php
+
+function dna_menu() {
+
+  $items['dna'] = array(
+    'title' => 'DNA Helix Generator',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('dna_form'),
+    'access callback' => TRUE,
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  $items['output_page'] = array(
+    'title' => 'DNA Pair Generated',
+    'page callback' => 'dna_success',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function dna_form() {
+  $form['enter_values'] = array(
+    '#title' => 'Enter A Nucleotide (letters A, C, G or T)',
+    '#type' => 'textfield',
+    '#description' => t("Please enter part of your DNA. (We're not tracking this...really."),
+    '#element_validate' => array('element_validate_input'),
+    '#required' => TRUE,
+  );
+
+  $form['Submit'] = array(
+    '#type' => 'submit',
+    '#value' => 'Display DNA Pair',
+  );
+
+  return $form;
+}
+
+function dna_form_submit($form, &$form_state) {
+	$dna_input = strtoupper($form_state['values']['enter_values']);
+	$new_helix = build_dna($dna_input);
+
+	$_SESSION['dna_input'] = $dna_input; 
+	$_SESSION['new_helix'] = $new_helix;
+
+	$form_state['redirect'] = 'output_page';
+}
+
+
+
+function dna_success() {
+  $output = '<h3> Helix 1: ' . $_SESSION['dna_input'] . '</h3>';
+  $output .= '<h3> Helix 2: ' . $_SESSION['new_helix'] . '</h3>';
+
+  return $output;
+}
+
+function build_dna($dna_input) {
+	$format_input = strtoupper($dna_input);
+	$tokens = str_split($format_input);
+	$result = "";
+
+	foreach ($tokens as $token) {
+		if ($token == 'A') { $result .= 'T'; }
+		if ($token == 'C') { $result .= 'G'; }    
+		if ($token == 'G') { $result .= 'C'; }
+		if ($token == 'T') { $result .= 'A'; }    
+	}	
+
+	return $result;
+
+}
+
+
+function element_validate_input($element) {
+  $format_input = strtoupper($element['#value']); 
+
+  if(preg_match('/[^ACGT]+/', $format_input)) {
+    form_error($element, t('Input can only include A, C, G or T.'));
+  }
+}

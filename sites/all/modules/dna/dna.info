@@ -1,0 +1,7 @@
+name =  DNA Pair Creator
+description = Creates pairing for input DNA string and display them 
+package = Custom Modules
+core = 7.x
+files[] = dna.module
+files[] = dna.test
+dependencies[] = simpletest
