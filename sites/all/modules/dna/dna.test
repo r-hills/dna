@@ -10,10 +10,22 @@ class dnaTests extends DrupalUnitTestCase {
 	}
 
 	function testDNA() {
+
 		$description = 'A simple string, "A," returns "T"';
 		$input = 'A';
 		$result = build_dna($input);
 		$this->assertEqual($result,'T'); 
+
+		$description = 'A simple lower case string, "c," returns "G"';
+		$input = 'c';
+		$result = build_dna($input);
+		$this->assertEqual($result,'G'); 		
+
+		$description = 'A multiple character string, "acgt," returns "TGCA"';
+		$input = 'acgt';
+		$result = build_dna($input);
+		$this->assertEqual($result,'TGCA'); 
+
 	}
 
 
