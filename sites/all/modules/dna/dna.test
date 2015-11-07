@@ -1,9 +1,9 @@
 <?php
 
-class dnaTests extends DrupalUnitTestCase {
+class dnaTestCase extends DrupalUnitTestCase {
 	public static function getInfo() {
 		return array(
-			'name' => 'DNA Unit Tests',
+			'name' => 'DNA Tests',
 			'description' => 'Unit tests for DNA Module',
 			'group' => 'DNA Module Tests',
 		);
@@ -28,6 +28,47 @@ class dnaTests extends DrupalUnitTestCase {
 
 	}
 
-
-
 }
+
+
+class dnaTests extends DrupalWebTestCase {
+    /**
+     * Display information for the Testing UI.
+     */
+    public static function getInfo() {
+        return array(
+            'name' => 'DNA Module Functional Test',
+            'description' => 'Tests the DNA module for front end functionality.',
+            'group' => 'DNA Module Tests',
+        );
+    }
+ 	/**
+ 	 * Enable DNA module in virtual environment for testing
+ 	 */
+    public function setUp() {
+        parent::setUp(array('dna'));
+
+        $this->createInput(); 
+    }
+
+    /*
+     * Create input page and enter input
+     */
+    public function createInput() {
+       $info = array();
+       $info['enter_values'] = "acgt";
+       $this->drupalPost('dna', $info, t('Display DNA Pair'));
+   }
+
+    /**
+     * Test the results on the results page
+     */
+    public function testResults() {
+        $this->assertText("TGCA", 'It works! Test string found on results page.');
+    }
+
+
+ }
+
+
+
