@@ -1,6 +1,14 @@
 <?php
 
-function mymodule_menu() {
+drupal_add_library('system', 'drupal.ajax');
+drupal_add_library('system', 'jquery.form');
+
+function ajax_links_init() {
+  drupal_add_js('misc/jquery.form.js');
+  drupal_add_library('system', 'drupal.ajax');
+}
+
+function ajax_links_menu() {
   $items['path-to-ajax/%/%'] = array(
     'access arguments' => array('access content'),
     'page callback' => 'mymodule_ajax_callback',
@@ -10,7 +18,7 @@ function mymodule_menu() {
   return $items;
 }
 
-function mymodule_ajax_callback($js, $node_id) {
+function ajax_links_ajax_callback($js, $node_id) {
   $node = node_load($node_id);
 
   if ($js == 'nojs') {
